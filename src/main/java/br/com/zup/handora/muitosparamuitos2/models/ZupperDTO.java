@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class ZupperDTO {
 
     @NotBlank
@@ -14,6 +16,7 @@ public class ZupperDTO {
 
     @NotNull
     @PastOrPresent
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataAdmissao;
 
     @NotBlank
