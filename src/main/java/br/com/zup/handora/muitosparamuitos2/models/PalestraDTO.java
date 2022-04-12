@@ -2,6 +2,7 @@ package br.com.zup.handora.muitosparamuitos2.models;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -13,6 +14,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+import br.com.zup.handora.muitosparamuitos2.repositories.ZupperRepository;
 
 public class PalestraDTO {
 
@@ -51,6 +57,22 @@ public class PalestraDTO {
         this.tipo = tipo;
         this.dataHora = dataHora;
         this.zupperIds = zupperIds;
+    }
+
+    public Palestra toModel(ZupperRepository zupperRepository) {
+        Set<Zupper> zuppers = zupperIds.stream()
+                                       .map(
+                                           id -> zupperRepository.findById(id)
+                                                                 .orElseThrow(
+                                                                     () -> new ResponseStatusException(
+                                                                         HttpStatus.NOT_FOUND,
+                                                                         "Não existe um zupper com o ID informado."
+                                                                     )
+                                                                 )
+                                       )
+                                       .collect(Collectors.toSet());
+
+        return new Palestra(titulo, tema, tempoMinutos, tipo, dataHora, zuppers);
     }
 
     public String getTitulo() {
