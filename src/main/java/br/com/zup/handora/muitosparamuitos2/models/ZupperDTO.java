@@ -29,6 +29,10 @@ public class ZupperDTO {
         this.email = email;
     }
 
+    public Zupper toModel() {
+        return new Zupper(nome, dataAdmissao, email);
+    }
+
     public String getNome() {
         return nome;
     }
